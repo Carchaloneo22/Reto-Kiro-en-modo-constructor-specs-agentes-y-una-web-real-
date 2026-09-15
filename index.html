@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiro en Modo Constructor | UNAB 12 sep 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --orange:#FF9900;--orange-dark:#E68A00;--orange-glow:rgba(255,153,0,.18);
+      --black:#0d0d0d;--dark:#111827;--dark-card:#1a2236;--dark-border:#2a3550;
+      --gray:#8892a4;--light:#f0f4fc;--white:#ffffff;
+      --radius:12px;--radius-lg:20px;
+      --shadow:0 4px 24px rgba(0,0,0,.45);
+      --shadow-orange:0 0 40px rgba(255,153,0,.25)}
+    html{scroll-behavior:smooth}
+    body{font-family:Inter,sans-serif;background:var(--dark);color:var(--white);line-height:1.6;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;
+      justify-content:space-between;padding:0 5%;height:64px;background:rgba(13,13,13,.85);
+      backdrop-filter:blur(12px);border-bottom:1px solid var(--dark-border);transition:background .3s}
+    .navbar-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1rem;letter-spacing:-.5px}
+    .navbar-brand .dot{color:var(--orange)}
+    .navbar-logo{width:32px;height:32px;background:var(--orange);border-radius:8px;
+      display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;color:var(--black)}
+    .navbar-links{display:flex;gap:2rem;list-style:none;font-size:.875rem;font-weight:500}
+    .navbar-links a{color:var(--gray);transition:color .2s}
+    .navbar-links a:hover{color:var(--orange)}
+    .navbar-cta{background:var(--orange);color:var(--black);font-weight:700;font-size:.85rem;
+      padding:.45rem 1.2rem;border-radius:6px;transition:background .2s,transform .15s}
+    .navbar-cta:hover{background:var(--orange-dark);transform:translateY(-1px)}
+    .hero{min-height:100vh;padding:120px 5% 80px;display:grid;grid-template-columns:1fr 1fr;
+      align-items:center;gap:4rem;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-120px;right:-120px;width:600px;height:600px;
+      background:radial-gradient(circle,rgba(255,153,0,.15) 0%,transparent 70%);pointer-events:none}
+    .hero::after{content:'';position:absolute;bottom:-80px;left:-80px;width:400px;height:400px;
+      background:radial-gradient(circle,rgba(255,153,0,.08) 0%,transparent 70%);pointer-events:none}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--orange-glow);
+      border:1px solid rgba(255,153,0,.4);color:var(--orange);font-size:.78rem;font-weight:700;
+      letter-spacing:.08em;text-transform:uppercase;padding:.35rem .85rem;border-radius:999px;margin-bottom:1.4rem}
+    .hero-badge .pulse{width:6px;height:6px;background:var(--orange);border-radius:50%;animation:pulse 1.5s infinite;display:inline-block}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+    .hero h1{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:900;line-height:1.12;letter-spacing:-.03em;margin-bottom:1.4rem}
+    .hero h1 .accent{color:var(--orange)}
+    .hero-meta{display:flex;flex-direction:column;gap:.6rem;margin-bottom:2.2rem}
+    .hero-meta-item{display:flex;align-items:center;gap:.7rem;font-size:1rem;color:var(--light)}
+    .hero-meta-item .icon{width:36px;height:36px;min-width:36px;background:var(--dark-card);
+      border:1px solid var(--dark-border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+    .btn-primary{background:var(--orange);color:var(--black);font-weight:800;font-size:.95rem;
+      padding:.75rem 1.8rem;border-radius:8px;transition:background .2s,transform .15s,box-shadow .2s;border:none;cursor:pointer;display:inline-block}
+    .btn-primary:hover{background:var(--orange-dark);transform:translateY(-2px);box-shadow:var(--shadow-orange)}
+    .btn-outline{background:transparent;color:var(--white);font-weight:600;font-size:.95rem;
+      padding:.75rem 1.8rem;border-radius:8px;border:1px solid var(--dark-border);
+      transition:border-color .2s,color .2s;display:inline-block}
+    .btn-outline:hover{border-color:var(--orange);color:var(--orange)}
+    .hero-visual{display:flex;align-items:center;justify-content:center;position:relative}
+    .hero-card{background:var(--dark-card);border:1px solid var(--dark-border);border-radius:var(--radius-lg);
+      padding:2rem;width:100%;max-width:400px;box-shadow:var(--shadow),var(--shadow-orange);position:relative}
+    .hero-card-header{display:flex;align-items:center;gap:.6rem;margin-bottom:1.4rem}
+    .dot-row{display:flex;gap:.4rem}
+    .dot-row span{width:10px;height:10px;border-radius:50%}
+    .dot-row .r{background:#ff5f57}.dot-row .y{background:#febc2e}.dot-row .g{background:#28c840}
+    .hero-card-label{font-size:.7rem;color:var(--gray);text-transform:uppercase;letter-spacing:.1em;margin-left:auto}
+    .code-block{background:#0a0f1a;border-radius:8px;padding:1rem 1.2rem;font-family:'Courier New',monospace;
+      font-size:.8rem;line-height:1.8;margin-bottom:1rem}
+    .c-keyword{color:#7c6af7}.c-string{color:#FF9900}.c-comment{color:#4a5568}.c-fn{color:#63b3ed}.c-var{color:#e2e8f0}
+    .hero-tags{display:flex;flex-wrap:wrap;gap:.5rem}
+    .tag{background:var(--orange-glow);border:1px solid rgba(255,153,0,.3);color:var(--orange);
+      font-size:.72rem;font-weight:600;padding:.25rem .7rem;border-radius:4px}
+    .hero-card-deco{position:absolute;top:-18px;right:-18px;width:56px;height:56px;background:var(--orange);
+      border-radius:var(--radius);display:flex;align-items:center;justify-content:center;
+      font-size:1.5rem;box-shadow:var(--shadow-orange)}
+    .stats-bar{background:var(--dark-card);border-top:1px solid var(--dark-border);
+      border-bottom:1px solid var(--dark-border);padding:1.4rem 5%;display:flex;
+      justify-content:center;gap:4rem;flex-wrap:wrap}
+    .stat{text-align:center}
+    .stat-value{font-size:1.6rem;font-weight:900;color:var(--orange);line-height:1}
+    .stat-label{font-size:.78rem;color:var(--gray);margin-top:.2rem;text-transform:uppercase;letter-spacing:.06em}
+    .section{padding:80px 5%}
+    .section-label{display:inline-block;color:var(--orange);font-size:.75rem;font-weight:700;
+      text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem}
+    .section-title{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.6rem}
+    .section-subtitle{color:var(--gray);font-size:1rem;max-width:560px;margin-bottom:3rem}
+    .section-header{margin-bottom:2.5rem}
+    .agenda{background:var(--black)}
+    .agenda-grid{display:flex;flex-direction:column;gap:.75rem;max-width:860px}
+    .agenda-item{display:grid;grid-template-columns:120px 1fr auto;align-items:center;gap:1.2rem;
+      background:var(--dark-card);border:1px solid var(--dark-border);border-radius:var(--radius);
+      padding:1rem 1.4rem;transition:border-color .2s,transform .2s;position:relative;overflow:hidden}
+    .agenda-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+      background:var(--dark-border);transition:background .2s}
+    .agenda-item:hover{border-color:rgba(255,153,0,.4);transform:translateX(4px)}
+    .agenda-item:hover::before{background:var(--orange)}
+    .agenda-item.highlight{border-color:rgba(255,153,0,.35);
+      background:linear-gradient(135deg,var(--dark-card) 0%,rgba(255,153,0,.06) 100%)}
+    .agenda-item.highlight::before{background:var(--orange)}
+    .agenda-item.break{background:rgba(255,153,0,.05);border-style:dashed}
+    .agenda-time{font-size:.82rem;font-weight:700;color:var(--orange);white-space:nowrap}
+    .agenda-title{font-size:.95rem;font-weight:600;color:var(--white);line-height:1.3}
+    .agenda-speaker{font-size:.8rem;color:var(--gray);margin-top:.15rem}
+    .agenda-type{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+      padding:.22rem .65rem;border-radius:4px;white-space:nowrap}
+    .type-observe{background:rgba(99,179,237,.15);color:#63b3ed}
+    .type-practice{background:rgba(154,230,180,.15);color:#68d391}
+    .type-talk{background:rgba(255,153,0,.15);color:var(--orange)}
+    .type-create{background:rgba(159,122,234,.15);color:#b794f4}
+    .type-reflect{background:rgba(252,211,77,.15);color:#fcd34d}
+    .type-break{background:rgba(160,174,192,.15);color:#a0aec0}
+    .type-workshop{background:rgba(240,93,93,.15);color:#fc8181}
+    .type-close{background:rgba(160,174,192,.12);color:#a0aec0}
+    .speakers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:720px}
+    .speaker-card{background:var(--dark-card);border:1px solid var(--dark-border);
+      border-radius:var(--radius-lg);padding:2rem 1.8rem;transition:border-color .25s,transform .25s,box-shadow .25s;
+      position:relative;overflow:hidden}
+    .speaker-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,var(--orange),transparent);opacity:0;transition:opacity .25s}
+    .speaker-card:hover{border-color:rgba(255,153,0,.5);transform:translateY(-4px);
+      box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 30px rgba(255,153,0,.12)}
+    .speaker-card:hover::after{opacity:1}
+    .speaker-avatar{width:72px;height:72px;border-radius:50%;
+      background:linear-gradient(135deg,var(--orange) 0%,var(--orange-dark) 100%);
+      display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:900;
+      color:var(--black);margin-bottom:1.2rem;border:3px solid rgba(255,153,0,.3)}
+    .speaker-name{font-size:1.05rem;font-weight:800;margin-bottom:.25rem}
+    .speaker-role{font-size:.82rem;color:var(--gray);margin-bottom:1rem;line-height:1.4}
+    .speaker-tag{display:inline-block;background:var(--orange-glow);border:1px solid rgba(255,153,0,.3);
+      color:var(--orange);font-size:.72rem;font-weight:600;padding:.25rem .7rem;border-radius:4px}
+    .organizers{background:var(--black)}
+    .org-grid{display:flex;flex-wrap:wrap;gap:1rem;align-items:center}
+    .org-chip{background:var(--dark-card);border:1px solid var(--dark-border);border-radius:8px;
+      padding:.7rem 1.4rem;font-size:.85rem;font-weight:600;color:var(--light);
+      display:flex;align-items:center;gap:.5rem;transition:border-color .2s}
+    .org-chip:hover{border-color:var(--orange)}
+    footer{background:var(--black);border-top:1px solid var(--dark-border);padding:2.5rem 5%;
+      display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .footer-left{display:flex;align-items:center;gap:.8rem}
+    .footer-logo{width:36px;height:36px;background:var(--orange);border-radius:8px;
+      display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--black);font-size:.9rem}
+    .footer-brand{font-weight:700;font-size:.9rem}
+    .footer-sub{font-size:.78rem;color:var(--gray)}
+    .footer-right{font-size:.8rem;color:var(--gray)}
+    .countdown-bar{background:linear-gradient(135deg,var(--dark-card),rgba(255,153,0,.05));
+      border:1px solid rgba(255,153,0,.25);border-radius:var(--radius);padding:1.2rem 2rem;
+      display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;max-width:520px;flex-wrap:wrap}
+    .countdown-label{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray)}
+    .countdown-units{display:flex;gap:.8rem}
+    .countdown-unit{text-align:center}
+    .countdown-num{display:block;font-size:1.4rem;font-weight:900;color:var(--orange);line-height:1}
+    .countdown-lbl{font-size:.65rem;color:var(--gray);text-transform:uppercase;letter-spacing:.06em}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .5s ease,transform .5s ease}
+    .reveal.visible{opacity:1;transform:none}
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr;padding-top:100px}
+      .hero-visual{display:none}
+      .navbar-links{display:none}}
+    @media(max-width:600px){
+      .stats-bar{gap:2rem}
+      .agenda-item{grid-template-columns:100px 1fr}
+      .agenda-type{display:none}
+      footer{flex-direction:column;text-align:center}}
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">
+    <div class="navbar-logo">K</div>
+    Kiro<span class="dot">.</span>build
+  </div>
+  <ul class="navbar-links">
+    <li><a href="#agenda">Agenda</a></li>
+    <li><a href="#ponentes">Ponentes</a></li>
+    <li><a href="#organiza">Organiza</a></li>
+  </ul>
+  <a href="#agenda" class="navbar-cta">Ver Agenda</a>
+</nav>
+
+<section class="hero" id="inicio">
+  <div class="hero-content">
+    <div class="hero-badge"><span class="pulse"></span>&nbsp;Evento presencial &middot; 12 Sep 2026</div>
+    <h1>Kiro en modo<br><span class="accent">constructor</span>:<br>specs, agentes<br>y una web real</h1>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><div class="icon">&#128197;</div><span>S&aacute;bado, 12 de septiembre de 2026</span></div>
+      <div class="hero-meta-item"><div class="icon">&#128336;</div><span>9:00 a.m. &ndash; 11:00 a.m.</span></div>
+      <div class="hero-meta-item"><div class="icon">&#128205;</div><span>UNAB &middot; Sal&oacute;n L51, Bucaramanga</span></div>
+    </div>
+    <div id="countdown" class="countdown-bar"><span class="countdown-label">Cargando&hellip;</span></div>
+    <div class="hero-actions">
+      <a href="#agenda" class="btn-primary">Ver agenda completa</a>
+      <a href="#ponentes" class="btn-outline">Conocer ponentes</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-card">
+      <div class="hero-card-deco">&#129302;</div>
+      <div class="hero-card-header">
+        <div class="dot-row"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="hero-card-label">kiro-express.spec</span>
+      </div>
+      <div class="code-block">
+        <div><span class="c-comment">// Kiro en modo constructor</span></div>
+        <div><span class="c-keyword">const</span> <span class="c-var">evento</span> = {</div>
+        <div>&nbsp;&nbsp;<span class="c-fn">titulo</span>: <span class="c-string">&quot;Flappy Kiro&quot;</span>,</div>
+        <div>&nbsp;&nbsp;<span class="c-fn">tech</span>: [<span class="c-string">&quot;SDD&quot;</span>, <span class="c-string">&quot;KDD&quot;</span>],</div>
+        <div>&nbsp;&nbsp;<span class="c-fn">lugar</span>: <span class="c-string">&quot;UNAB L51&quot;</span>,</div>
+        <div>&nbsp;&nbsp;<span class="c-fn">hora</span>: <span class="c-string">&quot;9:00 AM&quot;</span></div>
+        <div>};</div>
+        <br>
+        <div><span class="c-keyword">await</span> <span class="c-fn">kiro</span>.<span class="c-fn">build</span>(evento);</div>
+        <div><span class="c-comment">// &#10003; spec ready &middot; tasks running</span></div>
+      </div>
+      <div class="hero-tags">
+        <span class="tag">Specs</span>
+        <span class="tag">Agentes</span>
+        <span class="tag">Vibe Coding</span>
+        <span class="tag">Workshop</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat reveal"><div class="stat-value">2h</div><div class="stat-label">de duraci&oacute;n</div></div>
+  <div class="stat reveal"><div class="stat-value">7</div><div class="stat-label">bloques de agenda</div></div>
+  <div class="stat reveal"><div class="stat-value">1</div><div class="stat-label">charla invitada</div></div>
+  <div class="stat reveal"><div class="stat-value">1</div><div class="stat-label">workshop pr&aacute;ctico</div></div>
+</div>
+
+<section class="agenda section" id="agenda">
+  <div class="section-header reveal">
+    <span class="section-label">Programa</span>
+    <h2 class="section-title">Agenda del evento</h2>
+    <p class="section-subtitle">Dos horas intensas de aprendizaje, pr&aacute;ctica y construcci&oacute;n real con Kiro.</p>
+  </div>
+  <div class="agenda-grid">
+    <div class="agenda-item reveal">
+      <span class="agenda-time">9:00 &ndash; 9:10</span>
+      <div class="agenda-body"><div class="agenda-title">Observar: fundamentos de programaci&oacute;n</div><div class="agenda-speaker">Panorama de SDD, KDD y Vibe Coding</div></div>
+      <span class="agenda-type type-observe">Observar</span>
+    </div>
+    <div class="agenda-item reveal">
+      <span class="agenda-time">9:10 &ndash; 9:26</span>
+      <div class="agenda-body"><div class="agenda-title">Practicar: requisitos y anatom&iacute;a de SDD y KDD</div><div class="agenda-speaker">Manos a la obra con specs y agentes</div></div>
+      <span class="agenda-type type-practice">Practicar</span>
+    </div>
+    <div class="agenda-item highlight reveal">
+      <span class="agenda-time">9:26 &ndash; 9:46</span>
+      <div class="agenda-body"><div class="agenda-title">Charla invitada: &ldquo;Tendencia: Vibecoding&rdquo;</div><div class="agenda-speaker">&#127908; Jos&eacute; Verbel</div></div>
+      <span class="agenda-type type-talk">Charla</span>
+    </div>
+    <div class="agenda-item reveal">
+      <span class="agenda-time">9:46 &ndash; 9:56</span>
+      <div class="agenda-body"><div class="agenda-title">Crear: ejemplos comparativos en vivo</div><div class="agenda-speaker">Demos en tiempo real</div></div>
+      <span class="agenda-type type-create">Crear</span>
+    </div>
+    <div class="agenda-item reveal">
+      <span class="agenda-time">9:56 &ndash; 10:00</span>
+      <div class="agenda-body"><div class="agenda-title">Reflexionar: cierre y discusi&oacute;n</div><div class="agenda-speaker">Espacio de preguntas y reflexiones</div></div>
+      <span class="agenda-type type-reflect">Reflexionar</span>
+    </div>
+    <div class="agenda-item break reveal">
+      <span class="agenda-time">10:00 &ndash; 10:15</span>
+      <div class="agenda-body"><div class="agenda-title">&#9749; Refrigerio</div><div class="agenda-speaker">Pausa y networking</div></div>
+      <span class="agenda-type type-break">Descanso</span>
+    </div>
+    <div class="agenda-item highlight reveal">
+      <span class="agenda-time">10:15 &ndash; 10:55</span>
+      <div class="agenda-body"><div class="agenda-title">Workshop pr&aacute;ctico &ldquo;Kiro Express&rdquo;</div><div class="agenda-speaker">&#127918; Construir Flappy Kiro</div></div>
+      <span class="agenda-type type-workshop">Workshop</span>
+    </div>
+    <div class="agenda-item reveal">
+      <span class="agenda-time">10:55 &ndash; 11:00</span>
+      <div class="agenda-body"><div class="agenda-title">Cierre del evento</div><div class="agenda-speaker">Palabras finales y despedida</div></div>
+      <span class="agenda-type type-close">Cierre</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="ponentes">
+  <div class="section-header reveal">
+    <span class="section-label">Ponentes</span>
+    <h2 class="section-title">Qui&eacute;nes hablan</h2>
+    <p class="section-subtitle">Profesionales con experiencia real construyendo con IA.</p>
+  </div>
+  <div class="speakers-grid">
+    <div class="speaker-card reveal">
+      <div class="speaker-avatar">JR</div>
+      <div class="speaker-name">Juliana Ramirez A.</div>
+      <div class="speaker-role">Semi Senior Dev FinTech &middot; L&iacute;der de AWS User Group Bucaramanga</div>
+      <span class="speaker-tag">Organizadora &amp; Host</span>
+    </div>
+    <div class="speaker-card reveal">
+      <div class="speaker-avatar">JV</div>
+      <div class="speaker-name">Jos&eacute; Verbel</div>
+      <div class="speaker-role">Charla: &ldquo;Tendencia: Vibecoding&rdquo;</div>
+      <span class="speaker-tag">Charla invitada</span>
+    </div>
+  </div>
+</section>
+
+<section class="organizers section" id="organiza">
+  <div class="section-header reveal">
+    <span class="section-label">Organizan</span>
+    <h2 class="section-title">Detr&aacute;s del evento</h2>
+    <p class="section-subtitle">Tres comunidades unidas para impulsar el desarrollo con IA en Bucaramanga.</p>
+  </div>
+  <div class="org-grid">
+    <div class="org-chip reveal"><span>&#128640;</span> BucaraTec</div>
+    <div class="org-chip reveal"><span>&#9925;</span> AWS User Group Bucaramanga</div>
+    <div class="org-chip reveal"><span>&#127891;</span> UNAB TEC</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo">K</div>
+    <div>
+      <div class="footer-brand">Kiro en modo constructor</div>
+      <div class="footer-sub">UNAB &middot; Sal&oacute;n L51 &middot; 12 sep 2026</div>
+    </div>
+  </div>
+  <div class="footer-right">Organizado por BucaraTec, AWS User Group Bucaramanga &amp; UNAB TEC</div>
+</footer>
+
+<script>
+(function(){
+  var ed=new Date('2026-09-12T09:00:00-05:00'),ct=document.getElementById('countdown');
+  function pad(n){return String(n).padStart(2,'0');}
+  function tick(){
+    var now=new Date(),diff=ed-now;
+    if(diff<=0){ct.innerHTML='<span class="countdown-label">&#127881; El evento ya ocurri&oacute; &mdash; gracias por asistir!</span>';return;}
+    var d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),
+        m=Math.floor(diff%3600000/60000),s=Math.floor(diff%60000/1000);
+    ct.innerHTML='<span class="countdown-label">Faltan</span>'
+      +'<div class="countdown-units">'
+      +'<div class="countdown-unit"><span class="countdown-num">'+pad(d)+'</span><span class="countdown-lbl">d&iacute;as</span></div>'
+      +'<div class="countdown-unit"><span class="countdown-num">'+pad(h)+'</span><span class="countdown-lbl">horas</span></div>'
+      +'<div class="countdown-unit"><span class="countdown-num">'+pad(m)+'</span><span class="countdown-lbl">min</span></div>'
+      +'<div class="countdown-unit"><span class="countdown-num">'+pad(s)+'</span><span class="countdown-lbl">seg</span></div>'
+      +'</div>';
+  }
+  tick();setInterval(tick,1000);
+})();
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e,i){
+      if(e.isIntersecting){setTimeout(function(){e.target.classList.add('visible');},i*60);obs.unobserve(e.target);}
+    });
+  },{threshold:0.1});
+  els.forEach(function(el){obs.observe(el);});
+})();
+(function(){
+  var nav=document.querySelector('.navbar');
+  window.addEventListener('scroll',function(){
+    nav.style.background=window.scrollY>40?'rgba(13,13,13,.97)':'rgba(13,13,13,.85)';
+  });
+})();
+</script>
+</body>
+</html>
